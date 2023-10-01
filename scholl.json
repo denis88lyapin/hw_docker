@@ -1,0 +1,30 @@
+[
+  {
+    "model": "school.course",
+    "fields": {
+      "course_name": "Курс по djanjo-drf",
+      "course_preview": "",
+      "course_description": "Хорощий курс"
+    }
+  },
+  {
+    "model": "school.lesson",
+    "fields": {
+      "lesson_name": "Test",
+      "lesson_description": "TestTes",
+      "lesson_preview": "",
+      "video_url": null,
+      "course": 1
+    }
+  },
+  {
+    "model": "school.lesson",
+    "fields": {
+      "lesson_name": "Test2",
+      "lesson_description": "TestTest",
+      "lesson_preview": "",
+      "video_url": null,
+      "course": 1
+    }
+  }
+]
