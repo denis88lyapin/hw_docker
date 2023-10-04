@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
@@ -12,3 +12,4 @@ class PaymentListAPIView(generics.ListAPIView):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ('course', 'lesson', 'user', 'method')
     ordering_fields = ('date',)
+    permission_classes = [IsAuthenticated]
