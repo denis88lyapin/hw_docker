@@ -6,8 +6,8 @@ from users.models import User
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        user1 = User.objects.filter(email='test@test.ru').first()
-        user2 = User.objects.filter(email='test1@test.ru').first()
+        user1 = User.objects.filter(email='test1@test.ru').first()
+        user2 = User.objects.filter(email='test2@test.ru').first()
         course = Course.objects.first()
         lesson = Lesson.objects.first()
 

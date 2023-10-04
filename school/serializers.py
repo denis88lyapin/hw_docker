@@ -4,7 +4,7 @@ from school.models import Course, Lesson
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lessons_count = serializers.IntegerField(source='lesson_set.all.count')
+    lessons_count = serializers.IntegerField(read_only=True, source='lesson_set.count')
     lessons = serializers.SerializerMethodField()
 
     # lessons_count = serializers.SerializerMethodField()
@@ -21,9 +21,15 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
         # fields = ('id', 'course_name', 'course_preview', 'course_description', 'lessons_count')
+        extra_kwargs = {
+            'owner': {'required': False}
+        }
 
 
 class LessonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
+        extra_kwargs = {
+            'owner': {'required': False}
+        }
