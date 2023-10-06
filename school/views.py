@@ -2,7 +2,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, generics
 from school.models import Course, Lesson
 from school.permissions import IsModeratorViewSet, IsOwnerOrSuperuser, IsModerator
-from school.serializers import CourseSerializer, LessonListSerializer
+from school.serializers import CourseSerializer, LessonSerializer
+from school.validators import URL_Validator
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -20,7 +21,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
-    serializer_class = LessonListSerializer
+    serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModerator]
 
     def perform_create(self, serializer):
@@ -28,7 +29,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
-    serializer_class = LessonListSerializer
+    serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModerator]
 
     def get_queryset(self):
@@ -39,13 +40,13 @@ class LessonListAPIView(generics.ListAPIView):
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
-    serializer_class = LessonListSerializer
+    serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModerator]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = LessonListSerializer
+    serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModerator]
 

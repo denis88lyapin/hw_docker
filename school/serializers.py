@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from school.models import Course, Lesson
+from school.validators import URL_Validator
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class CourseSerializer(serializers.ModelSerializer):
     #     return 0
 
     def get_lessons(self, course):
-        return LessonListSerializer(Lesson.objects.filter(course=course), many=True).data
+        return LessonSerializer(Lesson.objects.filter(course=course), many=True).data
 
     class Meta:
         model = Course
@@ -26,10 +27,11 @@ class CourseSerializer(serializers.ModelSerializer):
         }
 
 
-class LessonListSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
         extra_kwargs = {
             'owner': {'required': False}
         }
+        validators = [URL_Validator(field='video_url')]
