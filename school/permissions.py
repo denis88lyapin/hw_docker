@@ -2,7 +2,7 @@ from rest_framework.permissions import BasePermission
 
 
 class IsModeratorViewSet(BasePermission):
-    message = "У Вас не достаточно прав на доступа!"
+    message = "У Вас не достаточно прав для доступа!"
 
     def has_permission(self, request, view):
         if request.user.groups.filter(name='moderators').exists():
@@ -12,7 +12,7 @@ class IsModeratorViewSet(BasePermission):
 
 
 class IsModerator(BasePermission):
-    message = "У Вас не достаточно прав на доступа!"
+    message = "У Вас не достаточно прав для доступа!"
 
     def has_permission(self, request, view):
         return request.user.groups.filter(name='moderators').exists()

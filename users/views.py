@@ -4,13 +4,14 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets, status
 
 from users.models import User
+from users.permissions import IsUserOrSuperuser
 from users.serializers import UserSerializer, UserPublicSerializer, UserCreateSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUserOrSuperuser]
 
     def get_permissions(self):
         if self.action == 'create':
