@@ -1,14 +1,15 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, generics
 from school.models import Course, Lesson, Subscription
+from school.paginators import CourseAndLessonPaginator
 from school.permissions import IsModeratorViewSet, IsOwnerOrSuperuser, IsModerator
 from school.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
-from school.validators import URL_Validator
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModeratorViewSet]
+    pagination_class = CourseAndLessonPaginator
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -40,6 +41,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModerator]
+    pagination_class = CourseAndLessonPaginator
 
     def get_queryset(self):
         if self.request.user.groups.filter(name='moderators').exists():
