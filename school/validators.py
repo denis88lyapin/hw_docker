@@ -7,7 +7,6 @@ from django.conf import settings
 class URL_Validator:
     def __init__(self, field):
         self.field = field
-        print(self.field)
 
     def __call__(self, value):
         url = value.get(self.field)
