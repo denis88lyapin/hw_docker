@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, generics
-from school.models import Course, Lesson
+from school.models import Course, Lesson, Subscription
 from school.permissions import IsModeratorViewSet, IsOwnerOrSuperuser, IsModerator
-from school.serializers import CourseSerializer, LessonSerializer
+from school.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 from school.validators import URL_Validator
 
 
@@ -18,6 +18,15 @@ class CourseViewSet(viewsets.ModelViewSet):
             return Course.objects.all()
         else:
             return Course.objects.filter(owner=self.request.user)
+
+
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+    permission_classes = [IsAuthenticated, IsOwnerOrSuperuser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
