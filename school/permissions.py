@@ -1,5 +1,7 @@
 from rest_framework.permissions import BasePermission
 
+from school.models import Lesson, Course
+
 
 class IsModeratorViewSet(BasePermission):
     message = "У Вас не достаточно прав для доступа!"
@@ -22,6 +24,11 @@ class IsOwnerOrSuperuser(BasePermission):
     message = "Вы не являетесь владельцем!"
 
     def has_object_permission(self, request, view, obj):
-        if request.user == obj.owner or request.user.is_superuser:
-            return True
-        return False
+        if isinstance(obj, Lesson) or isinstance(obj, Course):
+            if request.user == obj.owner or request.user.is_superuser:
+                return True
+            return False
+        else:
+            if request.user == obj.user or request.user.is_superuser:
+                return True
+            return False

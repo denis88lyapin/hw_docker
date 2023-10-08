@@ -32,7 +32,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_create(self):
-        url = reverse('school:lesson_create')
+        url = reverse('school:lesson-create')
         data = {
             'lesson_name': 'TestLesson1',
             'lesson_description': 'Test lesson description1',
@@ -58,7 +58,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_list(self):
-        url = reverse('school:lesson_list')
+        url = reverse('school:lesson-list')
 
         response = self.client.get(url)
 
@@ -80,7 +80,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_detail(self):
-        url = reverse('school:lesson_detail', kwargs={'pk': self.lesson.pk})
+        url = reverse('school:lesson-detail', kwargs={'pk': self.lesson.pk})
 
         response = self.client.get(url)
 
@@ -100,7 +100,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_update_PUT(self):
-        url = reverse('school:lesson_update', kwargs={'pk': self.lesson.pk})
+        url = reverse('school:lesson-update', kwargs={'pk': self.lesson.pk})
 
         data = {
             "lesson_name": self.lesson.lesson_name,
@@ -128,7 +128,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_update_PATCH(self):
-        url = reverse('school:lesson_update', kwargs={'pk': self.lesson.pk})
+        url = reverse('school:lesson-update', kwargs={'pk': self.lesson.pk})
 
         data = {
             "lesson_description": "test_update",
@@ -152,7 +152,7 @@ class LessonCRUDTestCase(APITestCase):
         )
 
     def test_lesson_delete(self):
-        url = reverse('school:lesson_delete', kwargs={'pk': self.lesson.pk})
+        url = reverse('school:lesson-delete', kwargs={'pk': self.lesson.pk})
 
         response = self.client.delete(url)
 
@@ -171,9 +171,8 @@ class SubscriptionTestCase(APITestCase):
         self.user.set_password('test3')
         self.user.save()
 
-        refresh = RefreshToken.for_user(self.user)
-        self.access_token = str(refresh.access_token)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        self.token = AccessToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
 
         self.course = Course.objects.create(
             course_name='Test',
@@ -183,11 +182,12 @@ class SubscriptionTestCase(APITestCase):
         self.subscription = Subscription.objects.create(course=self.course, user=self.user)
 
     def test_subscription_create(self):
-        url = reverse('school:subscription')
+        # url = reverse('school:subscription-create')
+        url = "/subscription/"
         print(url)
 
         data = {
-            'course': self.course.id,
+            'course': self.course.pk,
         }
 
         response = self.client.post(url, data)
@@ -198,14 +198,14 @@ class SubscriptionTestCase(APITestCase):
             response.json(),
             {
                 'id': 2,
-                "course": 1,
-                "user": 1,
+                "course": self.course.pk,
+                "user": self.user.pk,
                 "is_active": False
             }
         )
 
     def test_subscription_list(self):
-        url = reverse('school:subscription')
+        url = reverse('school:subscription-list')
 
         response = self.client.get(url)
 
@@ -224,8 +224,8 @@ class SubscriptionTestCase(APITestCase):
         )
 
     def test_subscription_update(self):
-        url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
-
+        # url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
+        url = f"/subscription/{self.subscription.pk}/"
         data = {
             "is_active": True,
         }
@@ -245,7 +245,7 @@ class SubscriptionTestCase(APITestCase):
         )
 
     def test_subscription_retrieve(self):
-        url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
+        url = reverse('school:subscription-detail', kwargs={'pk': self.subscription.pk})
 
         response = self.client.get(url)
 
@@ -262,7 +262,8 @@ class SubscriptionTestCase(APITestCase):
         )
 
     def test_subscription_delete(self):
-        url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
+        # url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
+        url = f"/subscription/{self.subscription.pk}/"
 
         response = self.client.delete(url)
 
