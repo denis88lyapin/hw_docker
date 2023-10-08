@@ -182,8 +182,8 @@ class SubscriptionTestCase(APITestCase):
         self.subscription = Subscription.objects.create(course=self.course, user=self.user)
 
     def test_subscription_create(self):
-        # url = reverse('school:subscription-create')
-        url = "/subscription/"
+        url = reverse('school:subscription-list')
+        # url = "/subscription/"
         print(url)
 
         data = {
@@ -224,8 +224,8 @@ class SubscriptionTestCase(APITestCase):
         )
 
     def test_subscription_update(self):
-        # url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
-        url = f"/subscription/{self.subscription.pk}/"
+        url = reverse('school:subscription-detail', kwargs={'pk': self.subscription.pk})
+        # url = f"/subscription/{self.subscription.pk}/"
         data = {
             "is_active": True,
         }
@@ -262,8 +262,8 @@ class SubscriptionTestCase(APITestCase):
         )
 
     def test_subscription_delete(self):
-        # url = reverse('school:subscription', kwargs={'pk': self.subscription.pk})
-        url = f"/subscription/{self.subscription.pk}/"
+        url = reverse('school:subscription-detail', kwargs={'pk': self.subscription.pk})
+        # url = f"/subscription/{self.subscription.pk}/"
 
         response = self.client.delete(url)
 
