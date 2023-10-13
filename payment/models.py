@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from config import settings
@@ -22,6 +24,13 @@ class Payment(models.Model):
     date = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты')
     payment_amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
     method = models.CharField(max_length=20, choices=PAID_METHOD, verbose_name='способ оплаты:')
+
+    # Stripe
+    uid = models.UUIDField(default=uuid.uuid4, editable=False, **NULLABLE)
+    stripe_id = models.CharField(max_length=255, unique=True, editable=False, **NULLABLE)
+    status = models.CharField(max_length=10, **NULLABLE)
+    customer_email = models.EmailField(**NULLABLE)
+
 
     def __str__(self):
         return f'{self.user} {self.course if self.course else self.lesson}, {self.payment_amount}'

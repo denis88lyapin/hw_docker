@@ -150,3 +150,16 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+STRIPE_PUBLIC_KEY = 'pk_test_51NzPggCxWQdZfyoVamRsuJxDyl0KA3aH1Lj2iMTNXxH7dFD2IR9qpkOw8di9Hyjn1r15Axd4jp4XjAE18Dkvv8kY007wcaOGGe'
+STRIPE_SECRET_KEY = 'sk_test_51NzPggCxWQdZfyoVY3ASfcKWUgscjNe1q96yxDRYNi0UC19kPnPhEWNTKTriUXJd0uZRY90qkZdNTTXMyFxcsfrE00W4TnmfPW'
+
+# SWAGGER_SETTINGS = {
+#     'SECURITY_DEFINITIONS': {
+#         'api_key': {
+#             'type': 'apiKey',
+#             'in': 'header',
+#             'name': 'Authorization'
+#         }
+#     },
+# }
