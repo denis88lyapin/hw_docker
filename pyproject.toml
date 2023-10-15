@@ -18,6 +18,9 @@ django-extensions = "^3.2.3"
 drf-yasg = "^1.21.7"
 stripe = "^6.7.0"
 requests = "^2.31.0"
+celery = "^5.3.4"
+redis = "^5.0.1"
+django-celery-results = "^2.5.1"
 
 
 [build-system]

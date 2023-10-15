@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'django_extensions',
+    # 'django_celery',
+    # 'django-celery-results',
 
     'drf_yasg',
 
@@ -163,3 +165,32 @@ STRIPE_SECRET_KEY = 'sk_test_51NzPggCxWQdZfyoVY3ASfcKWUgscjNe1q96yxDRYNi0UC19kPn
 #         }
 #     },
 # }
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = "UTC"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+# CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_CACHE_BACKEND = 'django-cache'
+# CELERY_BEAT_SCHEDULE = {
+#     'block_inactive_users': {
+#         'task': 'block_inactive_users',
+#         'schedule': timedelta(minutes=1)
+#     },
+# }
+#
+# CELERY_CACHE_BACKEND = 'default'
+#
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
+
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "denis88lyapin@yandex.ru"
+EMAIL_HOST_PASSWORD = 'myirdmajvcuzcrab'
+EMAIL_USE_SSL = True
