@@ -25,4 +25,9 @@
 Шаг 8. Создать платежи:
     python manage.py fill_pay
 Шаг 9. Запустить сервер
+Шаг 10. Запустить задачи celery
+    celery -A config worker -l INFO
+    celery -A config beat -l info -S django
+
+
 

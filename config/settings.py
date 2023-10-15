@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'django_extensions',
-    # 'django_celery',
+    'django_celery_beat',
     # 'django-celery-results',
 
     'drf_yasg',
@@ -59,7 +59,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'users.middleware.SetLastVisitMiddleware',
 ]
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -173,13 +176,13 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 # CELERY_RESULT_BACKEND = 'django-db'
 # CELERY_CACHE_BACKEND = 'django-cache'
-# CELERY_BEAT_SCHEDULE = {
-#     'block_inactive_users': {
-#         'task': 'block_inactive_users',
-#         'schedule': timedelta(minutes=1)
-#     },
-# }
-#
+CELERY_BEAT_SCHEDULE = {
+    'user_ban': {
+        'task': 'user_ban',
+        'schedule': timedelta(minutes=1)
+    },
+}
+
 # CELERY_CACHE_BACKEND = 'default'
 #
 # CACHES = {
