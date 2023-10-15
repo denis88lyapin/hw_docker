@@ -4,6 +4,7 @@ from school.models import Course, Lesson, Subscription
 from school.paginators import CourseAndLessonPaginator
 from school.permissions import IsModeratorViewSet, IsOwnerOrSuperuser, IsModerator
 from school.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from school.tasks import subscription_mailing
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -13,6 +14,11 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        course = self.get_object()
+        subscription_mailing.delay(course.id, 'Course')
+        return super().update(request, *args, **kwargs)
 
     def get_queryset(self):
         if self.request.user.groups.filter(name='moderators').exists():
@@ -35,7 +41,8 @@ class LessonCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, ~IsModerator]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        lesson = serializer.save(owner=self.request.user)
+        subscription_mailing.delay(lesson.id, 'Lesson')
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -60,6 +67,11 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser | IsModerator]
+
+    def update(self, request, *args, **kwargs):
+        lesson = self.get_object()
+        subscription_mailing.delay(lesson.id, 'Lesson')
+        return super().update(request, *args, **kwargs)
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
