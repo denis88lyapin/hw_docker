@@ -37,7 +37,7 @@ class PaymentCreateAPIView(generics.CreateAPIView):
         if data.get('course'):
             product = get_object_or_404(Course, pk=data['course'])
         else:
-            product = get_object_or_404(Course, pk=data['lesson'])
+            product = get_object_or_404(Lesson, pk=data['lesson'])
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
