@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,10 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%cwl8u-yf1d(vltew&uxfc5eqq78swmt50xb-qr_^5b@_so+!$'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG') == '1'
 
 ALLOWED_HOSTS = []
 
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_extensions',
     'django_celery_beat',
-    # 'django-celery-results',
 
     'drf_yasg',
 
@@ -62,7 +62,6 @@ MIDDLEWARE = [
 
     'users.middleware.SetLastVisitMiddleware',
 ]
-
 
 ROOT_URLCONF = 'config.urls'
 
@@ -90,11 +89,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hw_drf',
-        'USER': 'postgres',
-        'PASSWORD': '277710',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_USER_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT')
     }
 }
 
@@ -156,26 +155,16 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-STRIPE_PUBLIC_KEY = 'pk_test_51NzPggCxWQdZfyoVamRsuJxDyl0KA3aH1Lj2iMTNXxH7dFD2IR9qpkOw8di9Hyjn1r15Axd4jp4XjAE18Dkvv8kY007wcaOGGe'
-STRIPE_SECRET_KEY = 'sk_test_51NzPggCxWQdZfyoVY3ASfcKWUgscjNe1q96yxDRYNi0UC19kPnPhEWNTKTriUXJd0uZRY90qkZdNTTXMyFxcsfrE00W4TnmfPW'
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
-# SWAGGER_SETTINGS = {
-#     'SECURITY_DEFINITIONS': {
-#         'api_key': {
-#             'type': 'apiKey',
-#             'in': 'header',
-#             'name': 'Authorization'
-#         }
-#     },
-# }
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 CELERY_TIMEZONE = "UTC"
-CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TRACK_STARTED = config('CELERY_TASK_TRACK_STARTED') == '1'
 CELERY_TASK_TIME_LIMIT = 30 * 60
-# CELERY_RESULT_BACKEND = 'django-db'
-# CELERY_CACHE_BACKEND = 'django-cache'
+
 CELERY_BEAT_SCHEDULE = {
     'user_ban': {
         'task': 'user_ban',
@@ -183,17 +172,8 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-# CELERY_CACHE_BACKEND = 'default'
-#
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-#         'LOCATION': 'my_cache_table',
-#     }
-# }
-
-EMAIL_HOST = "smtp.yandex.ru"
-EMAIL_PORT = 465
-EMAIL_HOST_USER = "denis88lyapin@yandex.ru"
-EMAIL_HOST_PASSWORD = 'myirdmajvcuzcrab'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
