@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+
+  redis:
+    image: redis
+    ports:
+      - '6380:6379'
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  db:
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/pgdata
+    ports:
+      - '5433:5432'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # command: psql -U postgres && create database hw_docker && \q
+
+  app:
+      build: .
+      tty: true
+      env_file:
+        - .env
+      volumes:
+        - .:/app
+      ports:
+        - "8000:8000"
+      depends_on:
+        db:
+          condition: service_healthy
+      command: sh -c "sleep 3 && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+
+#      command: python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000
+
+  celery:
+    build: .
+    tty: true
+    command: sh -c "sleep 5 && celery -A config worker -l INFO"
+    depends_on:
+      - redis
+      - app
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      app:
+#        condition: service_started
+#      redis:
+#        condition: service_healthy
+
+  celery_beat:
+    build: .
+    tty: true
+    command: sh -c "sleep 10 && celery -A config beat -l info -S django"
+    depends_on:
+      - celery
+      - redis
+      - app
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      app:
+#        condition: service_started
+#      redis:
+#        condition: service_healthy
+
+volumes:
+  pg_data:
